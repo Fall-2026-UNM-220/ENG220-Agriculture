@@ -2,11 +2,16 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
+import streamlit as st
+from pathlib import Path
 
-# 2. Load the raw Food Access Research Atlas data
+# 2. Locate and load the original raw Food Access Research Atlas data
 
-df = pd.read_csv("Cuba_CCD_Food_Access_Raw.csv")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+df = pd.read_csv(
+    REPO_ROOT / "Cuba_CCD_Food_Access_Raw.csv"
+)
 
 # 3. Filter the data for Sandoval County, New Mexico
 
@@ -15,15 +20,7 @@ sandoval_data = df[
     (df["County"] == "Sandoval County")
 ].copy()
 
-# 4. Give Sandoval County census tract numbers
-
-print(sandoval_data["CensusTract"].tolist())
-
-# 5. Check the raw dataset columns
-
-print(df.columns.tolist())
-
-# 6. Processing the five census tracts that intersect Cuba CCD
+# 4. Identify the five census tracts that intersect Cuba CCD
 
 cuba_tracts = [
     35043010722,
@@ -33,15 +30,28 @@ cuba_tracts = [
     35043940900
 ]
 
-food_access_analysis = sandoval_data[
-    sandoval_data["CensusTract"].isin(cuba_tracts)
-].copy()
+# 5. Organize the census tracts in the correct order
 
-# 7. Identify the housing units receiving SNAP benefits
+sandoval_data["CensusTract"] = pd.to_numeric(
+    sandoval_data["CensusTract"]
+)
 
-snap_units = food_access_analysis["TractSNAP"].tolist()
+food_access_analysis = (
+    sandoval_data[
+        sandoval_data["CensusTract"].isin(cuba_tracts)
+    ]
+    .set_index("CensusTract")
+    .loc[cuba_tracts]
+    .reset_index()
+)
 
-# 8. Create census tract labels
+# 6. Identify the housing units receiving SNAP benefits
+
+snap_units = pd.to_numeric(
+    food_access_analysis["TractSNAP"]
+).tolist()
+
+# 7. Create census tract labels
 
 tract_labels = [
     "Tract 1",
@@ -59,7 +69,7 @@ geoids = [
     "35043940900"
 ]
 
-# 9. Create the horizontal bar graph
+# 8. Create the horizontal bar graph
 
 fig, ax = plt.subplots(figsize=(11, 7))
 
@@ -71,9 +81,14 @@ colors = [
     "#286D9E"
 ]
 
-bars = ax.barh(tract_labels, snap_units, color=colors, height=0.6)
+bars = ax.barh(
+    tract_labels,
+    snap_units,
+    color=colors,
+    height=0.6
+)
 
-# 10. Add values at the end of each bar
+# 9. Add values at the end of each bar
 
 for bar in bars:
     width = bar.get_width()
@@ -86,7 +101,7 @@ for bar in bars:
         fontsize=11
     )
 
-# 11. Add the title and axis labels
+# 10. Add the title and axis labels
 
 ax.set_title(
     "Housing Units Receiving SNAP Benefits by Census Tract",
@@ -94,10 +109,14 @@ ax.set_title(
     pad=15
 )
 
-ax.set_xlabel("Number of Housing Units Receiving SNAP", fontsize=11)
+ax.set_xlabel(
+    "Number of Housing Units Receiving SNAP",
+    fontsize=11
+)
+
 ax.set_ylabel("Census Tract", fontsize=11)
 
-# 12. Format the graph
+# 11. Format the graph
 
 ax.set_xlim(0, max(snap_units) + 100)
 
@@ -105,7 +124,7 @@ ax.grid(axis="x", linestyle="--", alpha=0.4)
 
 ax.invert_yaxis()
 
-# 13. Add geographic note and GEOID key
+# 12. Add geographic note and GEOID key
 
 fig.text(
     0.5, 0.12,
@@ -126,14 +145,20 @@ fig.text(
     fontsize=8
 )
 
-# 14. Adjust layout and save graph
+# 13. Adjust layout and save graph
 
 plt.tight_layout(rect=[0, 0.22, 1, 1])
 
-plt.savefig(
-    "Graph3_Housing_Units_Receiving_SNAP.png",
+fig.savefig(
+    Path(__file__).with_name(
+        "Graph3_Housing_Units_Receiving_SNAP.png"
+    ),
     dpi=300,
     bbox_inches="tight"
 )
 
-plt.show()
+# 14. Display graph in Streamlit
+
+st.pyplot(fig)
+
+plt.close(fig)
