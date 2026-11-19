@@ -1,1 +1,1 @@
-App project graphs and their corresponding Python files.
+All project graphs and their corresponding Python files.
