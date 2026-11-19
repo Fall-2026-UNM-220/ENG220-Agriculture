@@ -1,9 +1,11 @@
+
 # 1. Import libraries
 
 import matplotlib.pyplot as plt
-import numpy as np
+import streamlit as st
+from pathlib import Path
 
-# 2. vegetable production values from research
+# 2. Vegetable production values from research
 
 vegetables = [
     "Cucumber\n(46 days)",
@@ -50,42 +52,48 @@ for bar in bars:
 
 # 5. Add graph title and axis labels
 
-    ax.set_title(
-        "Aquaponics Vegetable Production",
-        fontsize=16,
-        fontweight="bold",
-        pad=18
-    )
+ax.set_title(
+    "Aquaponics Vegetable Production",
+    fontsize=16,
+    fontweight="bold",
+    pad=18
+)
 
-    ax.set_ylabel("Total Yield (kg/m²)", fontsize=11)
-    ax.set_xlabel("Vegetable and Growing Period", fontsize=11)
+ax.set_ylabel("Total Yield (kg/m²)", fontsize=11)
+ax.set_xlabel("Vegetable and Growing Period", fontsize=11)
 
 # 6. Format graph
 
-    ax.set_ylim(0, 6)
+ax.set_ylim(0, 6)
 
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
+ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-    ax.set_axisbelow(True)
+ax.set_axisbelow(True)
 
 # 7. Add source
 
-    fig.text(
-        0.5, 0.03,
-        "Source: Goda et al. (2015), Table 2, page 531. "
-        "IMTA-FRS aquaponic system.",
-        ha="center",
-        fontsize=9
-    )
+fig.text(
+    0.5, 0.03,
+    "Source: Goda et al. (2015), Table 2, page 531. "
+    "IMTA-FRS aquaponic system.",
+    ha="center",
+    fontsize=9
+)
 
-#  8. Adjust layout and save graph
+# 8. Adjust layout and save graph
 
-    plt.tight_layout(rect=[0, 0.08, 1, 1])
+plt.tight_layout(rect=[0, 0.08, 1, 1])
 
-    plt.savefig(
-        "Graph5_Aquaponics_Vegetable_Production.png",
-        dpi=300,
-        bbox_inches="tight"
-    )
+fig.savefig(
+    Path(__file__).with_name(
+        "Graph5_Aquaponics_Vegetable_Production.png"
+    ),
+    dpi=300,
+    bbox_inches="tight"
+)
 
-    plt.show()
+# 9. Display graph in Streamlit
+
+st.pyplot(fig)
+
+plt.close(fig)
