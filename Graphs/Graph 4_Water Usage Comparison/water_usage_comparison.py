@@ -1,7 +1,9 @@
+
 # 1. Import libraries
 
 import matplotlib.pyplot as plt
-import numpy as np
+import streamlit as st
+from pathlib import Path
 
 # 2. Water usage values from research
 
@@ -24,7 +26,7 @@ colors = [
     "#286D9E"
 ]
 
-# Create bars
+# Create background bars
 
 ax.barh(
     growing_methods,
@@ -57,7 +59,7 @@ for bar in bars:
         color="black"
     )
 
-#  5. Put graph title and axis label
+# 5. Put graph title and axis label
 
 ax.set_title(
     "Water Dependency by Growing Method",
@@ -113,11 +115,15 @@ plt.subplots_adjust(
     bottom=0.22
 )
 
-plt.savefig(
-    "Graph4_Water_Usage_Analysis.png",
+fig.savefig(
+    Path(__file__).with_name("Graph4_Water_Usage_Analysis.png"),
     dpi=300,
     bbox_inches="tight",
     facecolor="white"
 )
 
-plt.show()
+# 9. Display graph in Streamlit
+
+st.pyplot(fig)
+
+plt.close(fig)
