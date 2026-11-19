@@ -1,3 +1,4 @@
+
 # 1. Importing libraries
 
 import pandas as pd
@@ -13,14 +14,7 @@ df = pd.read_csv(
     REPO_ROOT / "Datasets" / "Cuba_CCD_Food_Access_Cleaned.csv"
 )
 
-# 3. Filtering data for Sandoval County, New Mexico
-
-sandoval_data = df[
-    (df["State"] == "New Mexico") &
-    (df["County"] == "Sandoval County")
-].copy()
-
-# 4. These five census tracts intersect Cuba CCD
+# 3. These five census tracts intersect Cuba CCD
 
 cuba_tracts = [
     35043010722,
@@ -30,11 +24,11 @@ cuba_tracts = [
     35043940900
 ]
 
-food_access_analysis = sandoval_data[
-    sandoval_data["CensusTract"].isin(cuba_tracts)
+food_access_analysis = df[
+    df["CensusTract"].isin(cuba_tracts)
 ].copy()
 
-# 5. Organizing census tracts in the correct order
+# 4. Organizing census tracts in the correct order
 
 food_access_analysis["CensusTract"] = pd.to_numeric(
     food_access_analysis["CensusTract"]
@@ -47,13 +41,13 @@ food_access_analysis = (
     .reset_index()
 )
 
-# 6. Processing housing units without vehicles
+# 5. Processing housing units without vehicles
 
 no_vehicle = pd.to_numeric(
     food_access_analysis["TractHUNV"]
 ).tolist()
 
-# 7. Creating census tract labels
+# 6. Creating census tract labels
 
 tract_labels = [
     "Tract 1",
@@ -71,7 +65,7 @@ geoids = [
     "35043940900"
 ]
 
-# 8. Creating horizontal bar graph
+# 7. Creating horizontal bar graph
 
 fig, ax = plt.subplots(figsize=(11, 7))
 
@@ -90,7 +84,7 @@ bars = ax.barh(
     height=0.6
 )
 
-# 9. Putting values at the end of each bar
+# 8. Putting values at the end of each bar
 
 for bar in bars:
     width = bar.get_width()
@@ -103,7 +97,7 @@ for bar in bars:
         fontsize=11
     )
 
-# 10. Adding title and axis labels
+# 9. Adding title and axis labels
 
 ax.set_title(
     "Housing Units Without Vehicles by Census Tract",
@@ -118,7 +112,7 @@ ax.set_xlabel(
 
 ax.set_ylabel("Census Tract", fontsize=11)
 
-# 11. Formatting graph
+# 10. Formatting graph
 
 ax.set_xlim(0, max(no_vehicle) + 20)
 
@@ -126,7 +120,7 @@ ax.grid(axis="x", linestyle="--", alpha=0.4)
 
 ax.invert_yaxis()
 
-# 12. Adding geographic notes and GEOID key
+# 11. Adding geographic notes and GEOID key
 
 fig.text(
     0.5, 0.12,
@@ -147,7 +141,7 @@ fig.text(
     fontsize=8
 )
 
-# 13. Adjusting layout and displaying graph
+# 12. Adjusting layout and displaying graph
 
 plt.tight_layout(rect=[0, 0.22, 1, 1])
 
