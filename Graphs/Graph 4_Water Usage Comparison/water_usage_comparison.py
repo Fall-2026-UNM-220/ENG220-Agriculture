@@ -1,4 +1,3 @@
-
 # 1. Import libraries
 
 import matplotlib.pyplot as plt
