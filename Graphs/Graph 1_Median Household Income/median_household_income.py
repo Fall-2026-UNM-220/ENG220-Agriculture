@@ -1,16 +1,19 @@
+
 # 1. Importing libraries
 
 import pandas as pd
-import matplotlib
-
-matplotlib.use("TkAgg")
-
 import matplotlib.pyplot as plt
 import numpy as np
+import streamlit as st
+from pathlib import Path
 
 # 2. Loading the Census data
 
-df = pd.read_csv("U.S. Census Bureau Economic Conditions_Raw.csv")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+df = pd.read_csv(
+    REPO_ROOT / "Datasets" / "U.S. Census Bureau Economic Conditions_Raw.csv"
+)
 
 # 3. Finding the median income row
 
@@ -32,9 +35,9 @@ colors = ["#168C9B", "#4169A1", "#8AADD0"]
 
 # 6. Creating the bar graph
 
-plt.figure(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(10, 6))
 
-bars = plt.bar(
+bars = ax.bar(
     locations,
     income,
     yerr=margin_error,
@@ -47,7 +50,7 @@ bars = plt.bar(
 
 for bar, value, error in zip(bars, income, margin_error):
 
-    plt.text(
+    ax.text(
         bar.get_x() + bar.get_width() / 2,
         value + error + 2200,
         f"${value:,.0f}",
@@ -58,41 +61,43 @@ for bar, value, error in zip(bars, income, margin_error):
 
 # 8. Adding graph title and axis labels
 
-plt.title(
+ax.set_title(
     "Median Household Income Comparison",
     fontsize=17,
     fontweight="bold"
 )
 
-plt.xlabel("Geographic Area")
+ax.set_xlabel("Geographic Area")
+ax.set_ylabel("Median Household Income ($)")
 
-plt.ylabel("Median Household Income ($)")
+# 9. Formatting the y-axis
 
-# 9. Formating the y-axis
+ax.set_ylim(0, 100000)
 
-plt.ylim(0, 100000)
+ax.set_yticks(
+    np.arange(0, 100001, 20000)
+)
 
-plt.yticks(
-    np.arange(0, 100001, 20000),
+ax.set_yticklabels(
     [f"${x:,.0f}" for x in np.arange(0, 100001, 20000)]
 )
 
 # 10. Adding gridlines
 
-plt.grid(axis="y", linestyle="--", alpha=0.3)
+ax.grid(axis="y", linestyle="--", alpha=0.3)
 
-plt.gca().set_axisbelow(True)
+ax.set_axisbelow(True)
 
-plt.gca().spines["top"].set_visible(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["left"].set_visible(False)
 
-plt.gca().spines["right"].set_visible(False)
+fig.tight_layout()
 
-plt.gca().spines["left"].set_visible(False)
+# 11. Saving and displaying the graph
 
-plt.tight_layout()
+fig.savefig("Graph1_Median_Household_Income.png", dpi=300)
 
-# 11. Save and display the graph
+st.pyplot(fig)
 
-plt.savefig("Graph1_Median_Household_Income.png", dpi=300)
-
-plt.show()
+plt.close(fig)
