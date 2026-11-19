@@ -2,8 +2,10 @@
 # 1. Import libraries
 
 import matplotlib.pyplot as plt
+import streamlit as st
+from pathlib import Path
 
-# 2. Geenhouse dimensions and growing-space estimate
+# 2. Greenhouse dimensions and growing-space estimate
 
 greenhouse_length = 96
 greenhouse_width = 30
@@ -14,8 +16,8 @@ growing_space_percentage = 0.64
 
 growing_area = total_area * growing_space_percentage
 
-print("Total greenhouse area:", total_area, "sq. ft.")
-print("Estimated growing area:", growing_area, "sq. ft.")
+st.write("Total greenhouse area:", total_area, "sq. ft.")
+st.write("Estimated growing area:", growing_area, "sq. ft.")
 
 # 3. Divide growing area among vegetables
 
@@ -31,8 +33,8 @@ growing_area_per_crop = growing_area / 3
 
 growing_area_m2 = growing_area_per_crop * 0.092903
 
-print("Growing area per vegetable:", growing_area_per_crop, "sq. ft.")
-print("Growing area per vegetable:", growing_area_m2, "m²")
+st.write("Growing area per vegetable:", growing_area_per_crop, "sq. ft.")
+st.write("Growing area per vegetable:", growing_area_m2, "m²")
 
 # 4. Enter production rates from research
 
@@ -52,16 +54,16 @@ for rate in production_rates:
     total_production = rate * growing_area_m2
     production.append(total_production)
 
-print("Projected vegetable production:")
+st.write("Projected vegetable production:")
 
 for vegetable, amount in zip(vegetables, production):
-    print(vegetable, ":", round(amount, 2), "kg")
+    st.write(vegetable, ":", round(amount, 2), "kg")
 
 # 6. Calculate total projected production
 
 total_production = sum(production)
 
-print("Total projected production:", round(total_production, 2), "kg")
+st.write("Total projected production:", round(total_production, 2), "kg")
 
 # 7. Create vertical bar graph
 
@@ -136,10 +138,14 @@ fig.text(
 
 plt.tight_layout(rect=[0, 0.12, 1, 1])
 
-plt.savefig(
-    "Graph6_Greenhouse_Projections.png",
+fig.savefig(
+    Path(__file__).with_name("Graph6_Greenhouse_Projections.png"),
     dpi=300,
     bbox_inches="tight"
 )
 
-plt.show()
+# 13. Display graph in Streamlit
+
+st.pyplot(fig)
+
+plt.close(fig)
