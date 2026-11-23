@@ -3,6 +3,8 @@
 
 Food insecurity can be affected by several factors, including household income, transportation, and access to grocery stores. Our project inspects these challenges in the Cuba community and explores aquaponics and greenhouse production as potential ways to support local food availability.
 
+### Live App: https://eng220-agriculture-h6wfpk4csqfho28liwfye5.streamlit.app/
+
 ## Project Goals
 
 - Examine economic conditions and food access challenges.
