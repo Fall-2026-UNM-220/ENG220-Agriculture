@@ -97,7 +97,7 @@ The project uses information from the following sources:
 
 | Team Member | Responsibilities |
 |---|---|
-| Marissa Gomez | Project Management, Allocate Roles, Finalize Slides |
+| Marissa Gomez (PM) | Project Management, Allocate Roles, Finalize Slides |
 | Di’Jonai Ruffin | StreamLit, Data Cleaning, Visuals |
 | Lauren Johnson | Satellite Data Sourcing, GitHub Management |
 | Chloe Cortez | GitHub, Slides, Aquaponics Research |
